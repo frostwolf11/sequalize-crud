@@ -1,9 +1,7 @@
-let success = async (res, status) => {
-	res.status(status).json({ message: 'Success' });
+let responseHandle = async (req, res, value) => {
+	let response = await value;
+	console.log(response);
+	res.status(response.status_code).json({ message: response.message, errorStatus: response.errorStatus });
 };
 
-let error = async (res, error, status) => {
-	res.status(status).json({ message: error.message });
-};
-
-module.exports = { success, error };
+module.exports = { responseHandle };

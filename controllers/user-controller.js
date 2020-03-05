@@ -1,10 +1,10 @@
 const db = require('../db');
 const providers = require('../providers/creation-provider');
 const reqUser = require('../providers/error-check');
-const handlers = require('../util/responseHandlers');
-exports.userRegister = async (req, res) => {
+
+exports.userRegister = async (req, res, next) => {
 	try {
-		let request_Validate = await reqUser(req.body);
+		let request_Validate = await reqUser(req);
 		let user_details = await providers.validateCreation(req.body);
 		let user_create = await db.User.create({
 			first_name: req.body.first_name,
@@ -13,8 +13,20 @@ exports.userRegister = async (req, res) => {
 			password: req.body.password,
 			username: req.body.username
 		});
-		await handlers.success(res, 201);
+		let Value = {
+			message: 'Created',
+			status_code: 201,
+			errorStatus: false
+		};
+		req.Value = Value;
+		return next();
 	} catch (error) {
-		await handlers.error(res, error, 500);
+		let Value = {
+			message: error.message,
+			status_code: 500,
+			errorStatus: true
+		};
+		req.Value = Value;
+		return next();
 	}
 };

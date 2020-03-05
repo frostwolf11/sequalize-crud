@@ -13,12 +13,6 @@ Object.keys(Models).forEach((modelName) => {
 });
 
 sequelize.authenticate();
-try {
-	console.log('Success!');
-} catch (error) {
-	console.log(error);
-	proccess.exit(0);
-}
 
 try {
 	sequelize.sync();
