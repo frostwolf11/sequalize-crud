@@ -34,6 +34,36 @@ function user(database, type) {
 			freezeTableName: true
 		}
 	);
+	User.getMine = async (req) => {
+		try {
+			let user = await User.findOne({ where: { email: req.email } });
+			return user;
+		} catch (error) {
+			throw new Error('Unable to find your profile');
+		}
+	};
+	User.getAll = async (limit, offset) => {
+		try {
+			let users_all = await User.findAll({ limit, offset });
+			return users_all;
+		} catch (error) {
+			throw new Error('Unable to locate all users');
+		}
+	};
+	User.createUser = async (req) => {
+		try {
+			let creation = await User.create({
+				first_name: req.first_name,
+				last_name: req.last_name,
+				email: req.email,
+				password: req.password,
+				username: req.username
+			});
+			return creation.id;
+		} catch (error) {
+			throw new Error(error);
+		}
+	};
 	return User;
 }
 

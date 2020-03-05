@@ -12,6 +12,13 @@ Object.keys(Models).forEach((modelName) => {
 	console.log(`Loading model - ${modelName}`);
 });
 
+Object.keys(db).forEach((modelName) => {
+	if ('associate' in db[modelName]) {
+		console.log(db[modelName]);
+		db[modelName].associate(db);
+	}
+});
+
 sequelize.authenticate();
 
 try {
@@ -22,6 +29,6 @@ try {
 }
 
 module.exports = Object.assign({}, db, {
-    sequelize,
-    Sequelize
-})
+	sequelize,
+	Sequelize
+});

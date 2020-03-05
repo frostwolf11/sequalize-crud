@@ -1,3 +1,4 @@
 const User = require('./userModel');
+const Address = require('./addressModel');
 
-module.exports = { User };
+module.exports = { User, Address };
