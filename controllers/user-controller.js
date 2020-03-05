@@ -1,20 +1,35 @@
 const db = require('../db');
 const providers = require('../providers/creation-provider');
 const reqUser = require('../providers/error-check');
-const handlers = require('../util/responseHandlers');
-exports.userRegister = async (req, res) => {
+
+exports.userRegister = async (req, res, next) => {
 	try {
-		let request_Validate = await reqUser(req.body);
+		let request_Validate = await reqUser(req);
 		let user_details = await providers.validateCreation(req.body);
-		let user_create = await db.User.create({
-			first_name: req.body.first_name,
-			last_name: req.body.last_name,
-			email: req.body.email,
-			password: req.body.password,
-			username: req.body.username
-		});
-		await handlers.success(res, 201);
+		let user_create = await db.User.createUser(req.body);
+		req.body.user_id = user_create;
+		let address_create = await db.Address.createData(req.body);
+		res.status_code = 201;
+		res.message = 'Created';
+		return next();
 	} catch (error) {
-		await handlers.error(res, error, 500);
+		res.status_code = 500;
+		res.message = error.message;
+		return next();
+	}
+};
+
+exports.userLogin = async (req, res, next) => {
+	try {
+		let request_Validate = await reqUser(req);
+		let user = await db.User.getMine(req.body);
+		res.status_code = 200;
+		res.message = user;
+		return next();
+	} catch (error) {
+		console.log(error);
+		res.status_code = 500;
+		res.message = error.message;
+		return next();
 	}
 };
