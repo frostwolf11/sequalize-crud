@@ -1,22 +1,33 @@
 const Sequelize = require('sequelize');
-const databaseUri = require('./config')
-const userModel = require('./models/userModel')
+const databaseUri = require('./config');
+const Models = require('./models/index');
+const Op = Sequelize.Op;
+const db = {};
 
+const sequelize = new Sequelize(databaseUri.psql_url);
 
-const sequelize = new Sequelize(databaseUri.psql_url)
-
-sequelize.authenticate().then(() => {
-    console.log("Success!");
-}).catch((err) => {
-    console.log(err);
-    proccess.exit(0)
+Object.keys(Models).forEach((modelName) => {
+	const model = Models[modelName](sequelize, Sequelize.DataTypes);
+	db[modelName] = model;
+	console.log(`Loading model - ${modelName}`);
 });
 
-const User = userModel(sequelize, Sequelize)
+sequelize.authenticate();
+try {
+	console.log('Success!');
+} catch (error) {
+	console.log(error);
+	proccess.exit(0);
+}
 
-sequelize.sync({})
-    .then(() => {
-        console.log("Created")
-    })
+try {
+	sequelize.sync();
+	console.log('created');
+} catch (error) {
+	console.log(error);
+}
 
-module.exports = {User}
+module.exports = Object.assign({}, db, {
+    sequelize,
+    Sequelize
+})
