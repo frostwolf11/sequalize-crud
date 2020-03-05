@@ -21,6 +21,7 @@ exports.userRegister = async (req, res, next) => {
 
 exports.userLogin = async (req, res, next) => {
 	try {
+		let request_Validate = await reqUser(req);
 		let user = await db.User.getMine(req.body);
 		res.status_code = 200;
 		res.message = user;

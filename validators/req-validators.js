@@ -7,4 +7,9 @@ const userCreationValidator = [
 	check('state', 'state must not be empty').not().isEmpty()
 ];
 
-module.exports = { userCreationValidator };
+const userLoginValidator = [
+	check('email', 'email must not be empty').not().isEmpty(),
+	check('username', 'username must not be empty').not().isEmpty()
+];
+
+module.exports = { userCreationValidator, userLoginValidator };

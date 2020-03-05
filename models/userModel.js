@@ -34,9 +34,9 @@ function user(database, type) {
 			freezeTableName: true
 		}
 	);
-	User.getMine = async (req) => {
+	User.getMine = async (reqBody) => {
 		try {
-			let user = await User.findOne({ where: { email: req.email } });
+			let user = await User.findOne({ where: { email: reqBody.email } });
 			return user;
 		} catch (error) {
 			throw new Error('Unable to find your profile');
@@ -50,14 +50,14 @@ function user(database, type) {
 			throw new Error('Unable to locate all users');
 		}
 	};
-	User.createUser = async (req) => {
+	User.createUser = async (reqBody) => {
 		try {
 			let creation = await User.create({
-				first_name: req.first_name,
-				last_name: req.last_name,
-				email: req.email,
-				password: req.password,
-				username: req.username
+				first_name: reqBody.first_name,
+				last_name: reqBody.last_name,
+				email: reqBody.email,
+				password: reqBody.password,
+				username: reqBody.username
 			});
 			return creation.id;
 		} catch (error) {

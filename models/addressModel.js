@@ -19,13 +19,17 @@ function address(database, type) {
 	Address.associate = function(models) {
 		Address.belongsTo(models.User);
 	};
-    Address.createData = async (req) =>{
-        Address.create({
-            detailId : req.user_id,
-            city : req.city,
-            state : req.state
-        })
-    }
+	Address.createData = async (reqBody) => {
+		try {
+			await Address.create({
+				detailId: reqBody.user_id,
+				city: reqBody.city,
+				state: reqBody.state
+			});
+		} catch (error) {
+			throw new Error('Unable to create address');
+		}
+	};
 	return Address;
 }
 
